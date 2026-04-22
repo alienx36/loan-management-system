@@ -2,7 +2,8 @@
 
 ## 📌 Overview
 A backend system that processes loan applications with eligibility checks, EMI calculation, and full lifecycle management.  
-It simulates a basic loan module of a core banking system.
+It simulates a basic loan module of a core banking system.  
+Built using a layered architecture (Controller → Service → Repository).
 
 ---
 
@@ -24,9 +25,15 @@ It simulates a basic loan module of a core banking system.
   - Income ≥ 25,000  
   - Credit Score ≥ 650  
   - Loan amount ≤ 10× income  
-- EMI is calculated using standard formula  
+- EMI is calculated using standard formula (based on interest rate and tenure)  
 - Loan is APPROVED or REJECTED  
 - Data stored across multiple related tables  
+
+### API Features
+- Apply for loan via REST API  
+- Fetch loan details by ID  
+- Pagination and filtering for loan APIs  
+- Structured JSON responses using DTOs  
 
 ---
 
@@ -38,14 +45,17 @@ Apply for loan
 ### GET /loan/{id}  
 Fetch loan details
 
+### GET /loan?status=APPROVED&page=0&size=2  
+Fetch loans with pagination and filtering  
+
 ---
 
 ## 🗄️ Database Tables
-- customer  
-- loan_application  
-- loan_eligibility  
-- loan_account  
-- emi_schedule  
+- customer → stores customer details  
+- loan_application → stores loan request and status  
+- loan_eligibility → stores eligibility result  
+- loan_account → stores approved loan details  
+- emi_schedule → stores EMI breakdown  
 
 ---
 
@@ -118,9 +128,12 @@ http://localhost:8081/swagger-ui.html
 
 ---
 
-### 6. Test GET API
+### 6. Test GET APIs
 
+```
 GET http://localhost:8081/loan/1
+GET http://localhost:8081/loan?status=APPROVED&page=0&size=2
+```
 
 ---
 
@@ -135,6 +148,7 @@ GET http://localhost:8081/loan/1
 - Clean layered architecture (Controller → Service → Repository)  
 - Full loan lifecycle implementation  
 - DTO-based API design  
+- Pagination using Spring Data Pageable  
 - Validation and global exception handling  
 - Logging using SLF4J  
 - Swagger API documentation  
