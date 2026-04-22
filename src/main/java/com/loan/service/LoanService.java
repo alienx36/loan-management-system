@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import com.loan.entity.*;
 import com.loan.repository.*;
@@ -37,7 +39,6 @@ public class LoanService {
 
         logger.info("Starting loan processing for: {}", customer.getEmail());
 
-        // VALIDATION
         if (customer.getIncome() <= 0) {
             logger.error("Invalid income");
             throw new RuntimeException("Income must be greater than 0");
@@ -139,5 +140,10 @@ public class LoanService {
 
         return (principal * rate * Math.pow(1 + rate, tenure)) /
                (Math.pow(1 + rate, tenure) - 1);
+    }
+
+    // 🔥 PAGINATION METHOD
+    public Page<LoanApplication> getLoans(String status, int page, int size) {
+        return loanApplicationRepository.findByStatus(status, PageRequest.of(page, size));
     }
 }
